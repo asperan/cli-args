@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/simopter
+simopter.so
+simopter.dylib
+simopter.dll
+simopter.a
+simopter.lib
+simopter-test-*
+*.exe
+*.o
+*.obj
+*.lst
+*.a
