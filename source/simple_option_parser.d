@@ -15,7 +15,7 @@ private class SimpleOptionParser : CommandLineOptionParser {
       Option!CommandLineOption correspondingOption = findOption(arg);
       if (!correspondingOption.isEmpty) {
         if (correspondingOption.get.needsArgument) {
-          if (index >= arguments.length - 1) { throw new Error("Last option needed an argument but no more arguments were given."); }
+          if (index + 1 >= arguments.length) { throw new Error("Last option needed an argument but no more arguments were given."); }
 					else {
 						correspondingOption.get.runStringSideEffect(arguments[index + 1]);
 						index += 1;
@@ -29,10 +29,10 @@ private class SimpleOptionParser : CommandLineOptionParser {
   private Option!CommandLineOption findOption(in string value) {
 		foreach(size_t index, CommandLineOption o; this.options) {
       if (o.shortName == value || o.longName == value) {
-        return Option!CommandLineOption.Some(this.options[index]);
+        return Option!CommandLineOption.some(this.options[index]);
       }
     }
-    return Option!CommandLineOption.None();
+    return Option!CommandLineOption.none();
   }
 
   private void registerOption(CommandLineOption opt) { options ~= opt; }
