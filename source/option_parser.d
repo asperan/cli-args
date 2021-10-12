@@ -8,8 +8,11 @@ module option_parser;
  * a side effect which accepts a string value as argument (the passed value can then be parsed to the desired type, for example "int").
  */
 class CommandLineOption {
+  /// The short name of the option.
   const string shortName;
+  /// The long name of the option.
 	const string longName;
+  /// The description of the option.
 	const string description;
 
 	private void delegate() voidSideEffect;
