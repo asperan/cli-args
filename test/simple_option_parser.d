@@ -29,3 +29,13 @@ unittest {
   string[] remainingArguments = op.parse(["-h", "-v", "--debug", "hello"]);
 	assert(remainingArguments.length == 0);
 }
+
+unittest {
+  import std.exception : assertThrown;
+  CommandLineOptionParser op = SimpleOptionParserBuilder()
+											.addOption("-v", "--version", "Print the program version and exit", () {writeln("void");})
+											.addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})
+											.addOption("-d", "--debug", "Print the next argument", (string arg) {writeln(arg);})
+											.build();
+  assertThrown!NoArgumentForLastOptionError(op.parse(["-d"]));
+}
