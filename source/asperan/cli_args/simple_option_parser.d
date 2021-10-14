@@ -1,6 +1,6 @@
-module simple_option_parser;
+module asperan.cli_args.simple_option_parser;
 
-import option_parser;
+public import asperan.cli_args.option_parser;
 import asperan.option;
 
 private class SimpleOptionParser : CommandLineOptionParser {

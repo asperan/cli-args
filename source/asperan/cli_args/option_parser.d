@@ -1,4 +1,4 @@
-module option_parser;
+module asperan.cli_args.option_parser;
 
 /**
  * Option object. It has a short name (for example "-h"), a long name (for example "--help") and a description.
@@ -29,12 +29,14 @@ class CommandLineOption {
   this(in string _shortName, in string _longName, in string _description, in void delegate() _voidSideEffect) {
 		this(_shortName, _longName, _description);
     this.voidSideEffect = _voidSideEffect;
+    this.stringSideEffect = null;
 	}
 
   /// This constructor creates new option, whose side effect function requires an argument.
   this(in string _shortName, in string _longName, in string _description, in void delegate(string) _stringSideEffect) {
 		this(_shortName, _longName, _description);
     this.stringSideEffect = _stringSideEffect;
+    this.voidSideEffect = null;
 	}
 
   /// Returns whether the option needs an additional argument
