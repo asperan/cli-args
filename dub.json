@@ -1,13 +1,23 @@
 {
 	"authors": [
-		"Alex Speranza"
+		"Alex \"asperan\" Speranza"
 	],
 	"copyright": "Copyright © 2021, Alex Speranza",
 	"dependencies": {
-		"option": "1.0.0"
+		"option": "2.0.2"
 	},
-	"description": "An extendible simple framework to parse command line options",
+	"description": "An extendible simple framework to parse command line options and arguments.",
 	"license": "MIT",
-	"name": "simopter",
-	"targetType": "library"
+	"name": "cli-args",
+	"targetType": "library",
+  "buildTypes": {
+    "docs": {
+      "dflags": [ "-c", "-Dddocs" ],
+      "buildOptions": [ "syntaxOnly" ]
+    },
+    "unittest": {
+      "sourcePaths": [ "test/" ],
+      "buildOptions": [ "unittests", "debugInfo", "debugMode" ],
+    }
+  }
 }
