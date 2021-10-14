@@ -1,8 +1,7 @@
 module simple_option_parser_test;
 
 import std.stdio;
-import option_parser;
-import simple_option_parser;
+import asperan.cli_args.simple_option_parser;
 
 unittest {
 	CommandLineOptionParser op = SimpleOptionParserBuilder()

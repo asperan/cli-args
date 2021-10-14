@@ -1,6 +1,6 @@
-module option_parser_test;
+module asperan.cli_args.option_parser_test;
 
-import option_parser;
+import asperan.cli_args.option_parser;
 import std.stdio;
 
 unittest {
