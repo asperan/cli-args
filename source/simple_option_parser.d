@@ -1,7 +1,7 @@
 module simple_option_parser;
 
 import option_parser;
-import option;
+import asperan.option;
 
 private class SimpleOptionParser : CommandLineOptionParser {
   private CommandLineOption[] options;
