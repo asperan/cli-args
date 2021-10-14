@@ -16,7 +16,7 @@
       "buildOptions": [ "syntaxOnly" ]
     },
     "unittest": {
-      "sourcePaths": [ "test/" ],
+      "sourcePaths": [ "test/", "source/" ],
       "buildOptions": [ "unittests", "debugInfo", "debugMode" ],
     }
   }
