@@ -6,11 +6,10 @@ import asperan.option;
 /**
  * A builder for an OptionParser which insert as command line argument all the unrecognized options;
  * the only error thrown is when the last string value is a recognized option which needs a secondary argument.
- * This is not a singleton, so every time "SimpleOptionParserBuilder()" is called, a new builder (and a new parser) is created.
  *
  * Examples:
  * --------------------------
- * CommandLineOptionParser op = SimpleOptionParserBuilder()
+ * CommandLineOptionParser op = new SimpleOptionParserBuilder()
  *   .addOption("-v", "--version", "Print the program version and exit", () {writeln("version");})
  *   .addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})
  *   .addOption("-d", "--debug", "Print the next argument", (string arg) {writeln(arg);})
@@ -18,14 +17,10 @@ import asperan.option;
  * --------------------------
  */
 class SimpleOptionParserBuilder {
-  /**
-   * Creates a new builder.
-   */
-  static SimpleOptionParserBuilder opCall() { return new SimpleOptionParserBuilder(); }
-  
-  private SimpleOptionParser parser = new SimpleOptionParser(); 
 
-  private this() { }
+  private SimpleOptionParser parser; 
+
+  private this() { this.parser = new SimpleOptionParser(); }
 
   /**
    * Returns the configured parser.
@@ -95,6 +90,8 @@ private class SimpleOptionParser : CommandLineOptionParser {
     return output;
   }
 
+  void registerOption(CommandLineOption opt) { options ~= opt; }
+
   private Option!CommandLineOption findOption(in string value) {
 		foreach(size_t index, CommandLineOption o; this.options) {
       if (o.shortName == value || o.longName == value) {
@@ -103,7 +100,5 @@ private class SimpleOptionParser : CommandLineOptionParser {
     }
     return Option!CommandLineOption.none();
   }
-
-  private void registerOption(CommandLineOption opt) { options ~= opt; }
 }
 
