@@ -7,6 +7,15 @@ import asperan.option;
  * A builder for an OptionParser which insert as command line argument all the unrecognized options;
  * the only error thrown is when the last string value is a recognized option which needs a secondary argument.
  * This is not a singleton, so every time "SimpleOptionParserBuilder()" is called, a new builder (and a new parser) is created.
+ *
+ * Examples:
+ * --------------------------
+ * CommandLineOptionParser op = SimpleOptionParserBuilder()
+ *   .addOption("-v", "--version", "Print the program version and exit", () {writeln("version");})
+ *   .addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})
+ *   .addOption("-d", "--debug", "Print the next argument", (string arg) {writeln(arg);})
+ *   .build(); 
+ * --------------------------
  */
 class SimpleOptionParserBuilder {
   /**
