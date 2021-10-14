@@ -4,7 +4,7 @@ import std.stdio;
 import asperan.cli_args.simple_option_parser;
 
 unittest {
-	CommandLineOptionParser op = SimpleOptionParserBuilder()
+	CommandLineOptionParser op = new SimpleOptionParserBuilder()
 											.addOption("-v", "--version", "Print the program version and exit", () {writeln("void");})
 											.addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})
 											.build();
@@ -12,7 +12,7 @@ unittest {
 }
 
 unittest {
-  CommandLineOptionParser op = SimpleOptionParserBuilder()
+  CommandLineOptionParser op = new SimpleOptionParserBuilder()
 											.addOption("-v", "--version", "Print the program version and exit", () {writeln("void");})
 											.addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})
 											.build();
@@ -21,7 +21,7 @@ unittest {
 }
 
 unittest {
-  CommandLineOptionParser op = SimpleOptionParserBuilder()
+  CommandLineOptionParser op = new SimpleOptionParserBuilder()
 											.addOption("-v", "--version", "Print the program version and exit", () {writeln("void");})
 											.addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})
 											.addOption("-d", "--debug", "Print the next argument", (string arg) {writeln(arg);})
@@ -32,7 +32,7 @@ unittest {
 
 unittest {
   import std.exception : assertThrown;
-  CommandLineOptionParser op = SimpleOptionParserBuilder()
+  CommandLineOptionParser op = new SimpleOptionParserBuilder()
 											.addOption("-v", "--version", "Print the program version and exit", () {writeln("void");})
 											.addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})
 											.addOption("-d", "--debug", "Print the next argument", (string arg) {writeln(arg);})

@@ -20,7 +20,7 @@ class SimpleOptionParserBuilder {
 
   private SimpleOptionParser parser; 
 
-  private this() { this.parser = new SimpleOptionParser(); }
+  this() { this.parser = new SimpleOptionParser(); }
 
   /**
    * Returns the configured parser.
