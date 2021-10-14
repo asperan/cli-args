@@ -7,6 +7,7 @@ unittest {
 	CommandLineOption o = new CommandLineOption("-v", "--version", "Print the program version and exit", () {writeln("void\n");});
 	assert(o.shortName == "-v");
   assert(o.longName == "--version");
+  assert(!o.needsArgument());
 }
 
 unittest {
