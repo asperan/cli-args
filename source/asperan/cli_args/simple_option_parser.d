@@ -1,7 +1,6 @@
 module asperan.cli_args.simple_option_parser;
 
 public import asperan.cli_args.option_parser;
-import asperan.option;
 
 /**
  * A builder for an OptionParser which insert as command line argument all the unrecognized options;
@@ -68,6 +67,8 @@ final class NoArgumentForLastOptionError : Error {
 }
 
 private class SimpleOptionParser : CommandLineOptionParser {
+  import std.typecons : Nullable;
+
   private CommandLineOption[] options;
 
   CommandLineOption[] getOptions() const { return cast(CommandLineOption[])options[]; }
@@ -76,8 +77,8 @@ private class SimpleOptionParser : CommandLineOptionParser {
 		string[] output;
 		for(size_t index = 0; index < arguments.length; index++) {
       string arg = arguments[index];
-      Option!CommandLineOption correspondingOption = findOption(arg);
-      if (!correspondingOption.isEmpty) {
+      Nullable!CommandLineOption correspondingOption = findOption(arg);
+      if (!correspondingOption.isNull) {
         if (correspondingOption.get.needsArgument) {
           if (index + 1 >= arguments.length) { throw new NoArgumentForLastOptionError(); }
 					else {
@@ -92,13 +93,13 @@ private class SimpleOptionParser : CommandLineOptionParser {
 
   void registerOption(CommandLineOption opt) { options ~= opt; }
 
-  private Option!CommandLineOption findOption(in string value) {
+  private Nullable!CommandLineOption findOption(in string value) {
 		foreach(size_t index, CommandLineOption o; this.options) {
       if (o.shortName == value || o.longName == value) {
-        return Option!CommandLineOption.some(this.options[index]);
+        return Nullable!CommandLineOption(this.options[index]);
       }
     }
-    return Option!CommandLineOption.none();
+    return Nullable!CommandLineOption();
   }
 }
 
