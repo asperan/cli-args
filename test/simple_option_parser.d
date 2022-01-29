@@ -32,6 +32,7 @@ unittest {
 
 unittest {
   import std.exception : assertThrown;
+    import asperan.cli_args.exception : NoArgumentForLastOptionError;
   CommandLineOptionParser op = new SimpleOptionParserBuilder()
 											.addOption("-v", "--version", "Print the program version and exit", () {writeln("void");})
 											.addOption("-h", "--help", "Print the help message and exit", () {writeln("help");})

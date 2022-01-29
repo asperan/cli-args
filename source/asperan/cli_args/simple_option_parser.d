@@ -57,15 +57,6 @@ string getSimpleHelpMessage(in CommandLineOptionParser parser) {
                 .reduce!"a ~ b";
 }
 
-/**
- * Error thrown when the last CLI option requires an additional value (but it is not provided as the option is the last argument).
- */
-final class NoArgumentForLastOptionError : Error {
-  this() {
-    super("Last option needed an argument but no more arguments were given.");
-  }
-}
-
 private class SimpleOptionParser : CommandLineOptionParser {
   import std.typecons : Nullable;
 
@@ -74,6 +65,7 @@ private class SimpleOptionParser : CommandLineOptionParser {
   CommandLineOption[] getOptions() const { return cast(CommandLineOption[])options[]; }
 
   string[] parse(in string[] arguments) {
+    import asperan.cli_args.exception : NoArgumentForLastOptionError;
 		string[] output;
 		for(size_t index = 0; index < arguments.length; index++) {
       string arg = arguments[index];
