@@ -63,8 +63,19 @@ class CommandLineOption
  *  An option parser is the object which parses an array of strings into options and command arguments.
  *  It should accept and register options.
  */
-interface CommandLineOptionParser
+abstract class CommandLineOptionParser
 {
+private:
+    CommandLineOption[] options;
+
+protected:
+
+    final void registerOption(CommandLineOption opt)
+    {
+        this.options ~= opt;
+    }
+
+public:
     /**
      *  Parses the argument array as Options and divide them from the command line arguments.
      *  It should also run the defined side effects.
@@ -77,6 +88,67 @@ interface CommandLineOptionParser
     /**
      *  Returns: the registered option list.
      */
-    CommandLineOption[] getOptions() const;
+    final CommandLineOption[] getOptions() const
+    {
+        return cast(CommandLineOption[]) this.options;
+    }
 }
 
+package abstract class OptionParserBuilder
+{
+protected:
+
+    CommandLineOptionParser getParser();
+
+public:
+
+    /**
+     *  Returns the configured parser.
+     */
+    CommandLineOptionParser build() { return this.getParser; }
+
+    /**
+     *  Adds an option to the parser. The option has a side effect which does not require an argument.
+     *  This method returns the builder it is called on, so it can be chained with other calls.
+     */
+    typeof(this) addOption(
+        in string shortName,
+        in string longName,
+        in string description,
+        in void delegate() voidSideEffect
+    )
+    {
+        this.getParser.registerOption(new CommandLineOption(shortName, longName, description, voidSideEffect));
+        return this;
+    }
+
+    /**
+     *  Adds an option to the parser. The option has a side effect which requires an argument.
+     *  This method returns the builder it is called on, so it can be chained with other calls.
+     */
+    typeof(this) addOption(
+        in string shortName,
+        in string longName,
+        in string description,
+        in void delegate(string) stringSideEffect
+    )
+    {
+        this.getParser.registerOption(new CommandLineOption(shortName, longName, description, stringSideEffect));
+        return this;
+    }
+
+}
+
+import std.typecons : Nullable;
+
+package Nullable!CommandLineOption findOption(CommandLineOption[] options, in string value) {
+    import std.algorithm.comparison : among;
+    foreach(CommandLineOption o; options)
+    {
+        if (value.among(o.shortName, o.longName))
+        {
+            return Nullable!CommandLineOption(o);
+        }
+    }
+    return Nullable!CommandLineOption();
+}

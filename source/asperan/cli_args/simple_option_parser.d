@@ -15,7 +15,7 @@ public import asperan.cli_args.option_parser;
  *      .build(); 
  *  --------------------------
  */
-class SimpleOptionParserBuilder
+class SimpleOptionParserBuilder : OptionParserBuilder
 {
 
     private SimpleOptionParser parser; 
@@ -25,40 +25,7 @@ class SimpleOptionParserBuilder
      */
     this() { this.parser = new SimpleOptionParser(); }
 
-    /**
-     *  Returns the configured parser.
-     */
-    CommandLineOptionParser build() { return this.parser; }
-
-    /**
-     *  Adds an option to the parser. The option has a side effect which does not require an argument.
-     *  This method returns the builder it is called on, so it can be chained with other calls.
-     */
-    SimpleOptionParserBuilder addOption(
-        in string shortName,
-        in string longName,
-        in string description,
-        in void delegate() voidSideEffect
-    )
-    {
-        this.parser.registerOption(new CommandLineOption(shortName, longName, description, voidSideEffect));
-        return this;
-    }
-
-    /**
-     *  Adds an option to the parser. The option has a side effect which requires an argument.
-     *  This method returns the builder it is called on, so it can be chained with other calls.
-     */
-    SimpleOptionParserBuilder addOption(
-        in string shortName,
-        in string longName,
-        in string description,
-        in void delegate(string) stringSideEffect
-    )
-    {
-        this.parser.registerOption(new CommandLineOption(shortName, longName, description, stringSideEffect));
-        return this;
-    }
+    override protected CommandLineOptionParser getParser() { return this.parser; }
 }
 
 /**
@@ -90,18 +57,14 @@ private class SimpleOptionParser : CommandLineOptionParser
 {
     import std.typecons : Nullable;
 
-    private CommandLineOption[] options;
-
-    CommandLineOption[] getOptions() const { return cast(CommandLineOption[])options[]; }
-
-    string[] parse(in string[] arguments)
+    override string[] parse(in string[] arguments)
     {
         import asperan.cli_args.exception : NoArgumentForLastOptionError;
 		string[] output;
 		for(size_t index = 0; index < arguments.length; index++)
         {
             string arg = arguments[index];
-            Nullable!CommandLineOption correspondingOption = findOption(arg);
+            Nullable!CommandLineOption correspondingOption = findOption(this.getOptions, arg);
             if (!correspondingOption.isNull)
             {
                 if (correspondingOption.get.needsArgument)
@@ -118,19 +81,6 @@ private class SimpleOptionParser : CommandLineOptionParser
             else { output ~= arg; }
         }
         return output;
-    }
-
-    void registerOption(CommandLineOption opt) { options ~= opt; }
-
-    private Nullable!CommandLineOption findOption(in string value) {
-		foreach(size_t index, CommandLineOption o; this.options)
-        {
-            if (o.shortName == value || o.longName == value)
-            {
-                return Nullable!CommandLineOption(this.options[index]);
-            }
-        }
-        return Nullable!CommandLineOption();
     }
 }
 
