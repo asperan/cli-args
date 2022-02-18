@@ -1,5 +1,7 @@
 module asperan.cli_args.option_parser;
 
+public import std.typecons : Nullable, Tuple;
+
 /**
  *  Option object.
  *
@@ -60,6 +62,53 @@ class CommandLineOption
 }
 
 /**
+ *  A subcommand further specifies what functionality is requested by the user.
+ *
+ *  Subcommands can have subsubcommands (and so on), but only one subcommand can be specified for each level of depth.
+ *
+ *  An example can be 'dub run' or 'dub test' where both 'run' and 'test' are subcommands.
+ */
+abstract class Subcommand
+{
+private:
+    string name;
+    string description;
+
+public:
+    this(in string name, in string description)
+    {
+        this.name = name;
+        this.description = description;
+    }
+
+    string getName()
+    {
+        return this.name;
+    }
+
+    string getDescription()
+    {
+        return this.description;
+    }
+
+    /**
+     *  Returns: the option parser of the subcommand.
+     */
+    CommandLineOptionParser getOptionParser();
+
+    /**
+     *  Runs the subcommand with the given arguments.
+     *
+     *  Params:
+     *      arguments = the arguments to pass to the subcommand.
+     */
+    void run(string[] arguments);
+}
+
+/// Alias for the parsing result.
+alias ParseResult = Tuple!(Nullable!Subcommand, "subcommand", string[], "remainingArguments");
+
+/**
  *  An option parser is the object which parses an array of strings into options and command arguments.
  *  It should accept and register options.
  */
@@ -68,7 +117,7 @@ abstract class CommandLineOptionParser
 private:
     CommandLineOption[] options;
 
-protected:
+package:
 
     final void registerOption(CommandLineOption opt)
     {
@@ -83,7 +132,7 @@ public:
      *      arguments = the array of the command line arguments.
      *  Returns: the non-Option arguments.
      */
-    string[] parse(in string[] arguments);
+    ParseResult parse(string[] arguments);
 
     /**
      *  Returns: the registered option list.
@@ -107,41 +156,10 @@ public:
      */
     CommandLineOptionParser build() { return this.getParser; }
 
-    /**
-     *  Adds an option to the parser. The option has a side effect which does not require an argument.
-     *  This method returns the builder it is called on, so it can be chained with other calls.
-     */
-    typeof(this) addOption(
-        in string shortName,
-        in string longName,
-        in string description,
-        in void delegate() voidSideEffect
-    )
-    {
-        this.getParser.registerOption(new CommandLineOption(shortName, longName, description, voidSideEffect));
-        return this;
-    }
-
-    /**
-     *  Adds an option to the parser. The option has a side effect which requires an argument.
-     *  This method returns the builder it is called on, so it can be chained with other calls.
-     */
-    typeof(this) addOption(
-        in string shortName,
-        in string longName,
-        in string description,
-        in void delegate(string) stringSideEffect
-    )
-    {
-        this.getParser.registerOption(new CommandLineOption(shortName, longName, description, stringSideEffect));
-        return this;
-    }
-
 }
 
-import std.typecons : Nullable;
-
-package Nullable!CommandLineOption findOption(CommandLineOption[] options, in string value) {
+package Nullable!CommandLineOption findOption(CommandLineOption[] options, in string value)
+{
     import std.algorithm.comparison : among;
     foreach(CommandLineOption o; options)
     {
@@ -151,4 +169,16 @@ package Nullable!CommandLineOption findOption(CommandLineOption[] options, in st
         }
     }
     return Nullable!CommandLineOption();
+}
+
+package Nullable!Subcommand findSubcommand(Subcommand[] subcommands, in string value)
+{
+    foreach(Subcommand s; subcommands)
+    {
+        if (s.getName == value)
+        {
+            return Nullable!Subcommand(s);
+        }
+    }
+    return Nullable!Subcommand();
 }
