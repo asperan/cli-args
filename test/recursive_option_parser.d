@@ -1,7 +1,7 @@
 module recursive_option_parser_test;
 
 import std.stdio;
-import asperan.cli_args.simple_option_parser;
+import asperan.cli_args.option_parser;
 
 alias fail = (string t) { assert(0, t); };
 
