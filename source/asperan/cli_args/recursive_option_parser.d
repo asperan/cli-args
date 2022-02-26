@@ -107,7 +107,7 @@ public:
         {
             if (selectedSubcommand.isNull)
             {
-                selectedSubcommand = findSubcommand(this.getSubcommands, arguments[0]);
+                selectedSubcommand = findSubcommand(this.subcommands, arguments[0]);
                 if (!selectedSubcommand.isNull)
                 {
                     // Start parsing of subcommand options
